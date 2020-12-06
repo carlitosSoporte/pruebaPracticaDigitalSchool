@@ -7,7 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,7 +30,6 @@ public class Conexion {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
         
         return conexion;
         
@@ -113,7 +111,7 @@ public class Conexion {
             
         }
         catch(Exception e){
-            System.out.println("Erro capa de modelo, metodo registrarConductor");
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, e);
         }
         
         return conductorInsertado;
@@ -147,6 +145,56 @@ public class Conexion {
         return vehiculos;
     }
     
+    public boolean registrarVehiculo(Vehiculo vehiculo){
+        boolean vehiculoInsertado = false;
+        try{
+            Connection conexion = this.conectar();
+            PreparedStatement preparar = conexion.prepareStatement("call sp_registrarVehiculo(?,?,?,?,?,?,?)");
+            preparar.setString(1, vehiculo.getPlacaVehiculo());
+            preparar.setString(2, vehiculo.getMarcaVehiculo());
+            preparar.setInt(3, vehiculo.getModeloVehiculo());
+            preparar.setString(4, vehiculo.getColorVehiculo());
+            preparar.setString(5, vehiculo.getTipoContrato());
+            preparar.setInt(6, vehiculo.getValorContrato());
+            preparar.setInt(7, vehiculo.getIdentificacionConductorVehiculo());
+            preparar.executeQuery();
+            vehiculoInsertado = true;
+            
+        }
+        catch(Exception e){
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, e);
+        }
+        
+        return vehiculoInsertado;
+    }
+    
+    public Vehiculo buscarVehiculo(String placa){
+        Vehiculo vehiculo = new Vehiculo();
+        
+        try {
+            Connection conectado = this.conectar();
+            PreparedStatement preparar = conectado.prepareStatement("call sp_buscarVehiculo(?)");
+            preparar.setString(1, placa);
+            ResultSet tabla = preparar.executeQuery();
+            if(tabla.first()){
+                vehiculo.setIdVehiculo(tabla.getInt(1));
+                vehiculo.setPlacaVehiculo(tabla.getString(2));
+                vehiculo.setMarcaVehiculo(tabla.getString(3));
+                vehiculo.setModeloVehiculo(tabla.getInt(4));
+                vehiculo.setColorVehiculo(tabla.getString(5));
+                vehiculo.setTipoContrato(tabla.getString(6));  
+                vehiculo.setValorContrato(tabla.getInt(7));
+                vehiculo.setIdentificacionConductorVehiculo(tabla.getInt(8));
+            }
+            else{
+                vehiculo = null;
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return vehiculo;
+    }
     
     
 }

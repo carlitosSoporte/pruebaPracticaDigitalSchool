@@ -21,10 +21,8 @@ public class NegocioConductor {
     public String registrarConductor(Conductor conductor){
         String respuesta;
         
-        if(conect.buscarConductor(conductor.getIdentificacionConductor())!=null){
-            respuesta = "2";
-        }
-        else{
+        if(this.buscarConductor(conductor.getIdentificacionConductor())!=null){
+            
             boolean registrado = conect.registrarConductor(conductor);
         
             if(registrado){
@@ -33,6 +31,11 @@ public class NegocioConductor {
             else{
                 respuesta = "0";
             }
+        }
+        else{
+            
+            respuesta = "2";
+            
         }
         
         return respuesta;
