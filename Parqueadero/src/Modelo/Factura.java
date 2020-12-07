@@ -5,9 +5,7 @@ public class Factura {
     
     private int idFactura;
     private String fechaIngreso;
-    private String horaIngreso;
     private String fechaSalida;
-    private String horaSalida;
     private String estadoFactura;
     private int totalPagar;
     private int idVehiculoFactura;
@@ -31,28 +29,12 @@ public class Factura {
         this.fechaIngreso = fechaIngreso;
     }
 
-    public String getHoraIngreso() {
-        return horaIngreso;
-    }
-
-    public void setHoraIngreso(String horaIngreso) {
-        this.horaIngreso = horaIngreso;
-    }
-
     public String getFechaSalida() {
         return fechaSalida;
     }
 
     public void setFechaSalida(String fechaSalida) {
         this.fechaSalida = fechaSalida;
-    }
-
-    public String getHoraSalida() {
-        return horaSalida;
-    }
-
-    public void setHoraSalida(String horaSalida) {
-        this.horaSalida = horaSalida;
     }
 
     public String getEstadoFactura() {

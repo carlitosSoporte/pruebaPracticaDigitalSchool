@@ -7,14 +7,43 @@ import Negocio.NegocioConductor;
 import java.util.ArrayList;
 import java.util.Scanner;
 import Negocio.NegocioVehiculo;
+import Negocio.NegocioFactura;
+import Modelo.Conexion;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class Parqueadero {
 
     
     public static void main(String[] args) {
+
+         mostrarMenuPrincipal();
+        /*LocalDateTime dateTime3=LocalDateTime.parse("2020-12-06T22:10:10");
+        LocalDateTime dateTime4=LocalDateTime.parse("2020-12-07T22:10:10");
+        System.out.println(dateTime3);
+        long diferencia1 = dateTime3.toEpochSecond(ZoneOffset.UTC);
+        long diferencia2 = dateTime4.toEpochSecond(ZoneOffset.UTC);
+        long diferencia = (diferencia2 - diferencia1)/60;
+        LocalDateTime horaActual = LocalDateTime.now();
+        System.out.println(horaActual.withNano(0));
+        System.out.println(diferencia);
         
-        mostrarMenuPrincipal();
+        System.out.println(diferencia);*/
+        
+        
+        
+        
+        
+        
      
     }
     
@@ -271,13 +300,13 @@ public class Parqueadero {
             System.out.println("------------------------------------------------------------------");
             switch(opcion){
                 case 1:
-                    
+                    registrarIngresoVehiculo();
                     break;
                 case 2:
-                    
+                    registrarSalidaVehiculo();
                     break;
                 case 3:
-                    
+                    mostrarMenuEstadisticas();
                     break;
                 case 4:
                     bandera = false;
@@ -349,6 +378,10 @@ public class Parqueadero {
                 case "3":
                     System.out.println("Vehiculo con placa "+vehiculo.getPlacaVehiculo()+" ya existe.");
                     break;
+                    
+                case "4":
+                    System.out.println("No quedan cupos disponibles para otro vehiculo.");
+                    break;
             }
         }
         catch(Exception e){
@@ -385,6 +418,48 @@ public class Parqueadero {
         }
         
         System.out.println("----------------------------------------------------------------");
+    }
+
+    private static void registrarIngresoVehiculo() {
+        Scanner teclado = new Scanner(System.in);
+        Vehiculo vehiculo = new Vehiculo();
+        System.out.println("----------------------------------------------------------------");
+        System.out.println("***INGRESO AL PARQUEADERO***\n");
+        
+        try{
+            System.out.print("Ingrese la placa del vehiculo que ingresará: ");
+            String placa = teclado.next();
+            
+            String respuestaIngreso = new NegocioFactura().registrarIngreso(placa);
+            switch(respuestaIngreso){
+                case "0":
+                    System.out.println("\nError ingresando los datos");
+                    break;
+                case "1":
+                    System.out.println("\nIngreso registrado satisfactoriamente.");
+                    break;
+                case "2":
+                    System.out.println("\nVehiculo con numero de placa "+placa+" no registrado, debe registrarlo primero");
+                    break;
+                case "3":
+                    System.out.println("\nEl vehiculo ya se encuentra en el parqueadero.");
+                    break; 
+                case "4":
+                    System.out.println("\nNo quedan espacios disponibles para parquear");
+                    break;
+            }     
+        }
+        catch(Exception ex){
+            System.out.println("Error diligenciando los datos");
+        }
+    }
+
+    private static void registrarSalidaVehiculo() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private static void mostrarMenuEstadisticas() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

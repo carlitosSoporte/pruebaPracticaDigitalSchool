@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -196,5 +197,82 @@ public class Conexion {
         return vehiculo;
     }
     
+    public boolean registrarIngreso(Factura factura){
+        boolean bandera = false;
+        
+        try {
+            conexion = this.conectar();
+            PreparedStatement preparar = conexion.prepareStatement("call sp_registrarIngreso(?,?,?)");
+            preparar.setString(1, factura.getFechaIngreso());
+            preparar.setString(2, factura.getEstadoFactura());
+            preparar.setInt(3, factura.getIdVehiculoFactura());
+            
+            preparar.execute();
+            bandera = true;
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return bandera;
+    }
+    
+    public int contarVehiculosMensuales(){
+        int vehiculosMensuales = -1;
+        try {
+            conexion = this.conectar();
+            PreparedStatement preparar = conexion.prepareStatement("call sp_contarMensual");
+            ResultSet tabla = preparar.executeQuery();
+            if(tabla.first()){
+                vehiculosMensuales = tabla.getInt(1);
+            }
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return vehiculosMensuales;
+    }
+    
+    public int contarParqueadosOtros(){
+        int parqueadosOtros = -1;
+        try {
+            conexion = this.conectar();
+            PreparedStatement preparar = conexion.prepareStatement("call sp_contarParqueadosOtros");
+            ResultSet tabla = preparar.executeQuery();
+            
+            if(tabla.first()){
+                parqueadosOtros = tabla.getInt(1);
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return parqueadosOtros;
+    }
+    
+    public boolean buscarIngreso(String placa){
+        boolean respuesta = false;
+        try{
+            conexion = this.conectar();
+            PreparedStatement preparar = conexion.prepareStatement("call sp_buscarIngreso(?)");
+            preparar.setString(1, placa);
+            ResultSet tabla = preparar.executeQuery();
+            if(tabla.first()){
+                if(tabla.getInt(1) > 0){
+                    respuesta = true;
+                }
+            }
+            
+            
+            
+        }
+        catch(SQLException ex){
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return respuesta;
+    }
     
 }
