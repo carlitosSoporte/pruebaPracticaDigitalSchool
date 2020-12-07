@@ -3,25 +3,13 @@ package parqueadero;
 
 import Modelo.Conductor;
 import Modelo.Vehiculo;
-import Modelo.Factura;
 import Negocio.NegocioConductor;
 import java.util.ArrayList;
 import java.util.Scanner;
 import Negocio.NegocioVehiculo;
 import Negocio.NegocioFactura;
-import Modelo.Conexion;
 import Negocio.ReglasNegocio;
-import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 
 public class Parqueadero {
@@ -30,20 +18,7 @@ public class Parqueadero {
     public static void main(String[] args) {
 
          mostrarMenuPrincipal();
-        /*LocalDateTime dateTime3=LocalDateTime.parse("2020-12-06T22:10:10");
-        LocalDateTime dateTime4=LocalDateTime.parse("2020-12-07T22:10:10");
-        System.out.println(dateTime3);
-        long diferencia1 = dateTime3.toEpochSecond(ZoneOffset.UTC);
-        long diferencia2 = dateTime4.toEpochSecond(ZoneOffset.UTC);
-        long diferencia = (diferencia2 - diferencia1)/60;
-        LocalDateTime horaActual = LocalDateTime.now();
-        System.out.println(horaActual.withNano(0));
-        System.out.println(diferencia);
-        
-        System.out.println(diferencia);*/
-        
-        
-     
+   
     }
     
     public static void mostrarMenuPrincipal(){
@@ -491,8 +466,7 @@ public class Parqueadero {
             System.out.println("                 Menu de opciones");
             System.out.println("1.Listar parqueados");
             System.out.println("2.Estado Parqueadero");
-            System.out.println("3.");
-            System.out.println("4.volver al menu principal\n");
+            System.out.println("3.volver al menu principal\n");
             
             System.out.print("ingrese la opcion requerida: ");
             opcion = teclado.nextInt();
@@ -506,9 +480,6 @@ public class Parqueadero {
                     mostrarEstadisticas();
                     break;
                 case 3:
-                    
-                    break;
-                case 4:
                     bandera = false;
                     System.out.println("\nUsted ha vuelto al menu principal.");
                     break;
@@ -533,7 +504,7 @@ public class Parqueadero {
     }
 
     private static void mostrarEstadisticas() {
-        System.out.println("------------------------------------------------------------------");
+        System.out.println("------------------------------------------------------------------\n");
         System.out.println("***ESTADO DEL PARQUEADERO***\n");
         System.out.println("CAPACIDAD MAXIMA PARQUEADERO: "+ReglasNegocio.CAPACIDADMAXIMAPARQUEO);
         int cuposUsados = new NegocioVehiculo().determinarCuposFijos();
@@ -547,6 +518,7 @@ public class Parqueadero {
         System.out.println("CANTIDAD DE PARQUEOS TOTAL: "+parqueados);
         System.out.println("CANTIDAD DE PARQUEOS CON CONTRATO MENSUAL: "+parqueadosContrato);
         System.out.println("CANTIDAD DE PARQUEADOS SIN CONTRATO: "+parqueadosOtros);
+        System.out.println("\n------------------------------------------------------------------");
         
         
     }

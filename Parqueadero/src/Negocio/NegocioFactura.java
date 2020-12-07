@@ -6,13 +6,9 @@ import Modelo.Conexion;
 import Modelo.Vehiculo;
 import Negocio.NegocioVehiculo;
 import Negocio.ReglasNegocio;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class NegocioFactura {
     
