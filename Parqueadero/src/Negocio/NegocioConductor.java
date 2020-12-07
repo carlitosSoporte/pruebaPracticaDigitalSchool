@@ -20,8 +20,9 @@ public class NegocioConductor {
     
     public String registrarConductor(Conductor conductor){
         String respuesta;
-        
-        if(this.buscarConductor(conductor.getIdentificacionConductor())!=null){
+        System.out.println(conductor.getIdentificacionConductor());
+        Conductor conductorValidador = this.buscarConductor(conductor.getIdentificacionConductor());
+        if(conductorValidador == null){
             
             boolean registrado = conect.registrarConductor(conductor);
         

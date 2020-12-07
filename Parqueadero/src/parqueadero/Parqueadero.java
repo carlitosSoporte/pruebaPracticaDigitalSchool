@@ -3,12 +3,14 @@ package parqueadero;
 
 import Modelo.Conductor;
 import Modelo.Vehiculo;
+import Modelo.Factura;
 import Negocio.NegocioConductor;
 import java.util.ArrayList;
 import java.util.Scanner;
 import Negocio.NegocioVehiculo;
 import Negocio.NegocioFactura;
 import Modelo.Conexion;
+import Negocio.ReglasNegocio;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,10 +41,6 @@ public class Parqueadero {
         System.out.println(diferencia);
         
         System.out.println(diferencia);*/
-        
-        
-        
-        
         
         
      
@@ -421,8 +420,8 @@ public class Parqueadero {
     }
 
     private static void registrarIngresoVehiculo() {
+        
         Scanner teclado = new Scanner(System.in);
-        Vehiculo vehiculo = new Vehiculo();
         System.out.println("----------------------------------------------------------------");
         System.out.println("***INGRESO AL PARQUEADERO***\n");
         
@@ -433,7 +432,7 @@ public class Parqueadero {
             String respuestaIngreso = new NegocioFactura().registrarIngreso(placa);
             switch(respuestaIngreso){
                 case "0":
-                    System.out.println("\nError ingresando los datos");
+                    System.out.println("\nError ingresando al parqueadero");
                     break;
                 case "1":
                     System.out.println("\nIngreso registrado satisfactoriamente.");
@@ -455,11 +454,101 @@ public class Parqueadero {
     }
 
     private static void registrarSalidaVehiculo() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Scanner teclado = new Scanner(System.in);
+        System.out.println("----------------------------------------------------------------");
+        System.out.println("***SALIDA DEL PARQUEADERO***\n");
+        
+        try{
+            System.out.print("Ingrese la placa del vehiculo que Saldrá: ");
+            String placa = teclado.next();
+            
+            String respuestaSalida = new NegocioFactura().registrarSalida(placa);
+            switch(respuestaSalida){
+                case "0":
+                    System.out.println("\nError saliendo del parqueadero");
+                    break;
+                case "1":
+                    System.out.println("\nSalida registrada satisfactoriamente.");
+                    break;
+                case "2":
+                    System.out.println("\nVehiculo con numero de placa "+placa+" no se encuentra dentro del parqueadero");
+                    break;
+            }     
+        }
+        catch(Exception ex){
+            System.out.println("Error diligenciando los datos");
+        }
     }
 
     private static void mostrarMenuEstadisticas() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Scanner teclado = new Scanner(System.in);
+        int opcion;
+        boolean bandera = true;
+        
+        while(bandera){
+            System.out.println("------------------------------------------------------------------");
+            System.out.println("Estadisticas y listado de parqueados\n");
+            System.out.println("                 Menu de opciones");
+            System.out.println("1.Listar parqueados");
+            System.out.println("2.Estado Parqueadero");
+            System.out.println("3.");
+            System.out.println("4.volver al menu principal\n");
+            
+            System.out.print("ingrese la opcion requerida: ");
+            opcion = teclado.nextInt();
+            
+            System.out.println("------------------------------------------------------------------");
+            switch(opcion){
+                case 1:
+                    listarParqueados();
+                    break;
+                case 2:
+                    mostrarEstadisticas();
+                    break;
+                case 3:
+                    
+                    break;
+                case 4:
+                    bandera = false;
+                    System.out.println("\nUsted ha vuelto al menu principal.");
+                    break;
+            }
+        }
+        presionarTecla();
+    }
+
+    private static void listarParqueados() {
+        System.out.println("------------------------------------------------------------------");
+        System.out.println("LISTADO DE AUTOS PARQUEADOS\n");
+        
+        ArrayList<ArrayList> listado = new ArrayList();
+        listado = new NegocioFactura().listarParqueados();
+        for (int i = 0; i < listado.size(); i++) {
+            System.out.println("PLACA: "+listado.get(i).get(0));
+            System.out.println("FECHA Y HORA DE INGRESO: "+listado.get(i).get(1));
+            System.out.println("TIPO CONTRATO: "+listado.get(i).get(2));
+            System.out.println("\n");
+        }
+        System.out.println("------------------------------------------------------------------");
+    }
+
+    private static void mostrarEstadisticas() {
+        System.out.println("------------------------------------------------------------------");
+        System.out.println("***ESTADO DEL PARQUEADERO***\n");
+        System.out.println("CAPACIDAD MAXIMA PARQUEADERO: "+ReglasNegocio.CAPACIDADMAXIMAPARQUEO);
+        int cuposUsados = new NegocioVehiculo().determinarCuposFijos();
+        int parqueadosOtros = new NegocioVehiculo().contarParqueadosOtros();
+        int parqueados = new NegocioFactura().listarParqueados().size();
+        int parqueadosContrato = parqueados - parqueadosOtros;
+        int contratoMensual = new NegocioVehiculo().contarVehiculosMensuales();
+        System.out.println("CUPOS USADOS ENTRE PARQUEADOS Y RESERVADOS POR MENSUALIDAD: "+cuposUsados);
+        System.out.println("LA CANTIDAD DE VEHICULOS CON CONTRATO MENSUAL ES DE: "+contratoMensual);
+        System.out.println("CUPOS DISPONIBLES EN EL PARQUEADERO: "+(ReglasNegocio.CAPACIDADMAXIMAPARQUEO-cuposUsados));
+        System.out.println("CANTIDAD DE PARQUEOS TOTAL: "+parqueados);
+        System.out.println("CANTIDAD DE PARQUEOS CON CONTRATO MENSUAL: "+parqueadosContrato);
+        System.out.println("CANTIDAD DE PARQUEADOS SIN CONTRATO: "+parqueadosOtros);
+        
+        
     }
 
 }

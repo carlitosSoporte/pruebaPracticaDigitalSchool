@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,6 +47,7 @@ public class Conexion {
             Connection conectado = this.conectar();
             PreparedStatement preparar = conectado.prepareStatement("call sp_listarConductor");
             tabla = preparar.executeQuery();
+            
             while(tabla.next()){
                 
                 Conductor conductor = new Conductor();
@@ -253,26 +255,78 @@ public class Conexion {
         return parqueadosOtros;
     }
     
-    public boolean buscarIngreso(String placa){
-        boolean respuesta = false;
+    public Factura buscarIngreso(String placa) {
+        
+        Factura factura = new Factura();
         try{
             conexion = this.conectar();
             PreparedStatement preparar = conexion.prepareStatement("call sp_buscarIngreso(?)");
             preparar.setString(1, placa);
             ResultSet tabla = preparar.executeQuery();
             if(tabla.first()){
-                if(tabla.getInt(1) > 0){
-                    respuesta = true;
-                }
+                factura.setFechaIngreso(tabla.getString(1));
+                factura.setIdVehiculoFactura(2);
             }
-            
-            
+            else{
+                factura = null;
+            }
             
         }
         catch(SQLException ex){
             Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return respuesta;
+        return factura;
+    }
+    
+    public boolean registrarSalida(Factura factura){
+       boolean bandera = false;
+        
+        try {
+            conexion = this.conectar();
+            PreparedStatement preparar = conexion.prepareStatement("call sp_registrarSalida(?,?,?,?)");
+            preparar.setString(1, factura.getFechaSalida());
+            preparar.setString(2, factura.getEstadoFactura());
+            preparar.setInt(3, factura.getTotalPagar());
+            preparar.setInt(4, factura.getIdVehiculoFactura());
+            
+            preparar.execute();
+            bandera = true;
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return bandera;
+    }
+    
+    public ArrayList<ArrayList> listarParqueados(){
+        ArrayList<ArrayList>  listadoParqueadosMensual = new ArrayList();
+        
+
+        
+        try {
+            conexion = this.conectar();
+            PreparedStatement preparar = conexion.prepareStatement("call sp_listarParqueados");
+            ResultSet listado = preparar.executeQuery();
+            
+            
+            while(listado.next()){
+                ArrayList<String> lista = new ArrayList();
+                lista.add(listado.getString(1));
+                lista.add(listado.getString(2));
+                lista.add(listado.getString(3));
+                listadoParqueadosMensual.add(lista);
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        return listadoParqueadosMensual;
+        
+        
     }
     
 }
